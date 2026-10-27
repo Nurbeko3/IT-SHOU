@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Omadli tanlov · IT Shou</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;800&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>IT <span>Shou</span></h1>
+    <a class="back" href="/">← Barcha o'yinlar</a>
+  </header>
+  <section>
+    <h2>Keyingi savolga kim javob beradi?</h2>
+    <p class="hint">Ro'yxatni kiriting (har qatorga bitta ism). Bu oddiy <code>random.choice()</code> funksiyasi, uni darslarda o'zimiz yozamiz.</p>
+    <div class="split">
+      <div><p class="big" id="winner">?</p><div class="row"><button class="btn" id="spin">Tanlash</button></div></div>
+      <div><textarea id="names" rows="8" style="font-size:16px">Aziz
+Madina
+Jasur
+Sevara
+Bekzod
+Dilnoza
+Sardor
+Malika</textarea></div>
+    </div>
+  </section>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+const store={get(k,d){try{return localStorage.getItem(k)??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const saved=store.get('itshou-names',null);if(saved)$('#names').value=saved;
+$('#names').oninput=()=>store.set('itshou-names',$('#names').value);
+let spinning=false;
+$('#spin').onclick=()=>{if(spinning)return;
+  const list=$('#names').value.split('\n').map(s=>s.trim()).filter(Boolean);if(!list.length)return;
+  spinning=true;let n=0,delay=50;
+  (function tick(){$('#winner').textContent=list[Math.floor(Math.random()*list.length)];n++;delay*=1.08;
+    if(n<30)setTimeout(tick,delay);else spinning=false;})();
+};
+</script>
+</body>
+</html>

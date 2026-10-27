@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Binar ism · IT Shou</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;800&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>IT <span>Shou</span></h1>
+    <a class="back" href="/">← Barcha o'yinlar</a>
+  </header>
+  <section>
+    <h2>Kompyuter sizning ismingizni qanday ko'radi?</h2>
+    <p class="hint">Kompyuter faqat 0 va 1 ni tushunadi. Har bir harf 8 bitli raqamga aylanadi. Ismingizni yozing va natijani daftarga ko'chiring.</p>
+    <input id="name" type="text" maxlength="16" autocomplete="off" value="Registan">
+    <div id="bin"></div>
+    <p class="hint" id="binsum"></p>
+  </section>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+function renderBin(){
+  const s=$('#name').value;let bits=0;$('#bin').innerHTML='';
+  for(const ch of s){const code=ch.codePointAt(0);const b=code.toString(2).padStart(8,'0');bits+=b.length;
+    const el=document.createElement('div');el.className='ch';el.innerHTML='<b></b><span></span><small></small>';
+    el.querySelector('b').textContent=ch===' '?'␣':ch;el.querySelector('span').textContent=b;el.querySelector('small').textContent=code;$('#bin').appendChild(el);}
+  $('#binsum').textContent=s?`"${s}" kompyuter xotirasida ${bits} bit (${Math.ceil(bits/8)} bayt) joy egallaydi.`:'';
+}
+$('#name').oninput=renderBin;renderBin();
+</script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Son top · IT Shou</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;800&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>IT <span>Shou</span></h1>
+    <a class="back" href="/">← Barcha o'yinlar</a>
+  </header>
+  <section>
+    <h2>1 dan 1000 gacha son o'ylang. Kompyuter uni 10 urinishda topadi.</h2>
+    <p class="hint">Son o'ylang va yozib qo'ying. Kompyuter har safar taxmin qiladi, siz <b>"Kattaroq"</b>, <b>"Kichikroq"</b> yoki <b>"Topding!"</b> ni bosasiz. Bu sehr emas, <b>ikkilik qidiruv algoritmi</b>. Google ham shunday tez qidiradi.</p>
+    <div class="range"><i id="rbar" style="left:0;width:100%"></i></div>
+    <p class="big" id="guess">Tayyormisiz?</p>
+    <div class="row" id="mctl"><button class="btn" id="mstart">Boshlash</button></div>
+    <div class="log" id="mlog"></div>
+  </section>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+let lo,hi,g,tries;
+function drawRange(){$('#rbar').style.left=((lo-1)/1000*100)+'%';$('#rbar').style.width=((hi-lo+1)/1000*100)+'%';}
+function next(){
+  if(lo>hi){$('#guess').textContent='Hmm, kimdir adashdi :)';setCtl('restart');return;}
+  g=Math.floor((lo+hi)/2);tries++;$('#guess').textContent=tries+'-urinish: '+g+'?';drawRange();
+}
+function setCtl(mode){
+  const c=$('#mctl');
+  if(mode==='play'){c.innerHTML='<button class="btn c" id="up">Kattaroq ↑</button><button class="btn r" id="dn">Kichikroq ↓</button><button class="btn g" id="ok">Topding!</button>';
+    $('#up').onclick=()=>{log('↑ '+g);lo=g+1;next()};
+    $('#dn').onclick=()=>{log('↓ '+g);hi=g-1;next()};
+    $('#ok').onclick=()=>{$('#guess').textContent='Siz '+g+' ni o\'yladingiz! ('+tries+' urinishda)';lo=hi=g;drawRange();
+      log('Har urinishda variantlar 2 barobar kamaydi: 1000 → 500 → 250 → … → 1. Shuning uchun 10 ta savol yetadi (2¹⁰ = 1024).');setCtl('restart')};
+  }else{c.innerHTML='<button class="btn" id="mstart">'+(mode==='restart'?'Yana bir marta':'Boshlash')+'</button>';$('#mstart').onclick=start;}
+}
+function log(t){const d=document.createElement('div');d.textContent=t;$('#mlog').appendChild(d);}
+function start(){lo=1;hi=1000;tries=0;$('#mlog').innerHTML='';setCtl('play');next();}
+$('#mstart').onclick=start;
+</script>
+</body>
+</html>

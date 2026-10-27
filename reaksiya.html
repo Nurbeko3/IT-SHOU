@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Reaksiya · IT Shou</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;800&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>IT <span>Shou</span></h1>
+    <a class="back" href="/">← Barcha o'yinlar</a>
+  </header>
+  <section>
+    <h2>Kimning reaksiyasi eng tez?</h2>
+    <div class="split">
+      <div>
+        <input id="rname" type="text" maxlength="20" placeholder="Ismingiz">
+        <button id="pad">Boshlash uchun bosing</button>
+      </div>
+      <div>
+        <p class="hint">Qizil bo'lsa kuting, yashil bo'lganda darhol bosing. O'rtacha odam: 250 ms atrofida.</p>
+        <div class="board" id="board"></div>
+        <button class="btn ghost" id="rclear">Jadvalni tozalash</button>
+      </div>
+    </div>
+  </section>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let state='idle',t0=0,timer;let scores=store.get('itshou-scores',[]);
+function board(){$('#board').innerHTML=scores.length?'':'<div><span>Hali natija yo\'q</span></div>';
+  scores.slice(0,8).forEach((s,i)=>{const d=document.createElement('div');d.innerHTML='<span></span><span></span>';
+    d.children[0].textContent=(i+1)+'. '+s.n;d.children[1].textContent=s.ms+' ms';$('#board').appendChild(d);});}
+board();
+$('#pad').onclick=()=>{const p=$('#pad');
+  if(state==='idle'||state==='done'){state='wait';p.className='wait';p.textContent='Kuting…';
+    timer=setTimeout(()=>{state='go';p.className='go';p.textContent='BOSING!';t0=performance.now()},1500+Math.random()*2500);}
+  else if(state==='wait'){clearTimeout(timer);state='done';p.className='';p.textContent='Erta bosdingiz! Qayta urinish uchun bosing';}
+  else if(state==='go'){const ms=Math.round(performance.now()-t0);state='done';p.className='';p.textContent=ms+' ms · qayta urinish uchun bosing';
+    scores.push({n:$('#rname').value.trim()||'Mehmon',ms});scores.sort((a,b)=>a.ms-b.ms);scores=scores.slice(0,20);store.set('itshou-scores',scores);board();}
+};
+$('#rclear').onclick=()=>{scores=[];store.set('itshou-scores',scores);board();};
+</script>
+</body>
+</html>
